@@ -1,6 +1,8 @@
 import weatherApi from 'openweather-apis'
 
 weatherApi.setAPPID(process.env['WEATHER_API_KEY'])
+weatherApi.setLang(process.env['LANG'])
+weatherApi.setUnits(process.env['UNITS'] as any)
 
 export interface weatherInfo {
   coord: { lon: number; lat: number }
