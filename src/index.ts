@@ -4,5 +4,5 @@ import yargs from 'yargs'
   yargs.argv._[0]
     .split(',')
     .map((place) => place.trim())
-    .map((place) => Place.fromString(place))
+    .map(async (place) => await Place.fromString(place))
 })()
