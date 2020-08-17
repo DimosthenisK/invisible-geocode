@@ -1,6 +1,6 @@
 import weatherApi from 'openweather-apis'
 
-weatherApi.setAPPID('')
+weatherApi.setAPPID(process.env['WEATHER_API_KEY'])
 
 export interface weatherInfo {
   coord: { lon: number; lat: number }
