@@ -8,8 +8,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Dimosthenis Kalaitzis",
+  "license": "MIT",
+  "repository": "https://github.com/dimosthenisK/invisible-geocode",
   "dependencies": {
     "jest": "^26.4.0",
     "ts-jest": "^26.2.0",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
-    "@types/node": "^14.6.0"
+    "@types/node": "^14.6.0",
+    "prettier": "^2.0.5"
   }
 }
