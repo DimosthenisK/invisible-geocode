@@ -7,6 +7,7 @@
     - [Built With](#built-with)
     - [Installation](#installation)
     - [Usage](#usage)
+    - [Test](#test)
     - [Sample output](#sample-output)
 
 
@@ -47,6 +48,11 @@ LANG=en
 yarn run start "Location Information"
 yarn run start "Athens Greece"
 yarn run start "Athens Greece, New York US, Sao Paolo"
+```
+
+### Test
+```sh
+yarn test
 ```
 
 ### Sample output
