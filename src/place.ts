@@ -1,6 +1,6 @@
 import { geocoder } from './geocoder'
 import { Entry } from 'node-geocoder'
-import { from, Observable } from 'rxjs'
+import { from, Observable, Observer } from 'rxjs'
 import { map, reduce } from 'rxjs/operators'
 import { weather, weatherInfo } from './weatherApi'
 import moment, { Moment } from 'moment-timezone'
@@ -20,9 +20,20 @@ interface timeInformation {
   formatted: string
 }
 
+export type completedEntry = Entry & { timeInformation: timeInformation } & {
+  weatherInformation: weatherInfo | null
+}
+export type displayableEntry = {
+  Location: string
+  'Time information': string
+  'Weather information': string
+}
+
 export class Place {
   constructor() {}
-  static async fromString(place: string): Promise<void> {
+  static async fromString(
+    place: string,
+  ): Promise<Observable<displayableEntry>> {
     const possibilities: Observable<Entry> = from(await geocoder.geocode(place))
     const getHighestPossibility = (
       highestConfidenceEntry: Entry,
@@ -36,37 +47,28 @@ export class Place {
     }
     const getWeatherAndTimeInformation = async (
       entry: Entry,
-    ): Promise<
-      Entry & { timeInformation: timeInformation } & {
-        weatherInformation: weatherInfo | null
-      }
-    > => ({
+    ): Promise<completedEntry> => ({
       ...entry,
       weatherInformation: await Place.getWeatherForPlace(entry),
       timeInformation: await Place.getTimeForPlace(entry),
     })
-    const formatToObject = async (
-      entry: Promise<
-        Entry & { timeInformation: timeInformation } & {
-          weatherInformation: weatherInfo | null
-        }
-      >,
-    ) => {
+    const formatToObject = async (entry: Promise<completedEntry>) => {
       let finalObject = await entry
-      console.log(finalObject)
       return {
         Location: `${finalObject.state}, ${finalObject.country} (${finalObject.latitude} ${finalObject.longitude})`,
         'Time information': finalObject.timeInformation.formatted,
         'Weather information': `${finalObject.weatherInformation.weather[0].description}, ${finalObject.weatherInformation.main.temp} degrees (${finalObject.weatherInformation.main.temp_max} max / ${finalObject.weatherInformation.main.temp_min} min)`,
       }
     }
-    possibilities
-      .pipe(
-        reduce(getHighestPossibility),
-        map(getWeatherAndTimeInformation),
-        map(formatToObject),
-      )
-      .subscribe(async (value) => console.table(await value))
+    return Observable.create((observer: Observer<displayableEntry>) => {
+      possibilities
+        .pipe(
+          reduce(getHighestPossibility),
+          map(getWeatherAndTimeInformation),
+          map(formatToObject),
+        )
+        .subscribe(async (value) => observer.next(await value))
+    })
   }
 
   static async getTimeForPlace(place: Entry): Promise<timeInformation> {
