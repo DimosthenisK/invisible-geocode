@@ -7,6 +7,7 @@
     - [Built With](#built-with)
     - [Installation](#installation)
     - [Usage](#usage)
+    - [Sample output](#sample-output)
 
 
 ## About The Project
@@ -40,3 +41,6 @@ yarn run start "Location Information"
 yarn run start "Athens Greece"
 yarn run start "Athens Greece, New York US, Sao Paolo"
 ```
+
+### Sample output
+![Sample output](./output.png)
