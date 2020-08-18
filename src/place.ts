@@ -1,7 +1,7 @@
 import { geocoder } from './geocoder'
 import { Entry } from 'node-geocoder'
 import { from, Observable, Observer } from 'rxjs'
-import { map, reduce } from 'rxjs/operators'
+import { map, reduce, defaultIfEmpty } from 'rxjs/operators'
 import { weather, weatherInfo } from './weatherApi'
 import moment, { Moment } from 'moment-timezone'
 import geoTz from 'geo-tz'
@@ -66,6 +66,17 @@ export class Place {
           reduce(getHighestPossibility),
           map(getWeatherAndTimeInformation),
           map(formatToObject),
+        )
+        .pipe(
+          defaultIfEmpty(
+            new Promise((resolve) =>
+              resolve({
+                Location: `${place} Not Found`,
+                'Time information': '',
+                'Weather information': '',
+              }),
+            ),
+          ),
         )
         .subscribe(async (value) => observer.next(await value))
     })
