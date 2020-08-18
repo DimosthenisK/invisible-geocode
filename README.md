@@ -34,6 +34,13 @@ git clone https://github.com/dimosthenisk/invisible-geocode.git
 ```sh
 yarn
 ```
+3. Fill in your API keys & Options in the .env
+```
+GEO_API_KEY=
+WEATHER_API_KEY=
+UNITS=metric
+LANG=en
+```
 
 ### Usage
 ```sh
